@@ -82,6 +82,15 @@
     .input-like{width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:.8rem; border-radius:12px}
 
     @media (max-width:980px){ .grid{grid-template-columns:1fr} .two{grid-template-columns:1fr; gap:1rem} .tier.active{grid-template-columns:1fr} }
+
+    /* Ajustes móviles finos */
+    @media (max-width:560px){
+      .calc{grid-template-columns:1fr}
+      .btn{display:block; width:100%; text-align:center; overflow-wrap:anywhere}
+      .cta{gap:.5rem}
+      .card.pad{padding:1rem}
+      .price{font-size:1.7rem}
+    }
     @media (max-width:600px){ .calc{grid-template-columns:1fr} .cta{flex-direction:column} .btn{width:100%; text-align:center; white-space:normal} }
 
     /* Impresión */
@@ -533,7 +542,7 @@
             <li><strong>Propuesta:</strong> ISTHMUS asume el valor de estas 6 matrículas como inversión de lanzamiento (modalidad negociable: pago completo, parcial o beca institucional).</li>
             <li>Finalidad: activar <em>alumnos reales</em> desde el día uno, validar claridad de contenidos y dinámica de soporte, y producir casos con evidencia.</li>
             <li><strong>Criterios de selección:</strong> mérito académico y potencial de impacto; diversidad de perfiles (ARQ/ESTR/MEP).</li>
-            <li><strong>Compromisos del fundador:</strong> completar el nivel, autorizar uso de testimonio/evidencias y participar en sesión de feedback.</li>
+            <li><strong>Compromisos del fundador:</strong> completar el nivel, autorizar uso de testimonio/evidencias y participar en sesión de feedback).</li>
           </ul>
           <p class="note">Piloto académico controlado para calibrar rúbricas y recoger feedback antes del escalamiento.</p>
         </details>
@@ -651,12 +660,12 @@
   </main>
 
   <footer>
-    <small>© <span id="year"></span> ARQEDU.COM — UI minimalista para desktop y móvil.</small>
+    <small>© <span id="year"></span> ARQEDU.COM — UI minimalista para desktop y móvil. · <strong>Versión v3</strong> · <span id="build"></span></small>
   </footer>
 
   <script>
   // =========================
-  // ARQEDU · Interactivo BIM (estable)
+  // ARQEDU · Interactivo BIM (v3 estable)
   // =========================
 
   // Datos base
@@ -686,7 +695,7 @@
     if (window.innerWidth < 980) $('#tiers')?.scrollIntoView({behavior:'smooth', block:'start'});
   }));
 
-  // Navegación superior
+  // Navegación superior (pills → scroll a secciones)
   $$('[data-goto]').forEach(el=>{
     el.addEventListener('click', ()=>{
       const target = document.querySelector(el.getAttribute('data-goto'));
@@ -707,11 +716,7 @@
   }
   topnav?.addEventListener('scroll', updateNavFades, {passive:true});
   window.addEventListener('resize', updateNavFades);
-  setTimeout(updateNavFades, 0); }
-      $$('.pill').forEach(p=>p.removeAttribute('aria-current'));
-      el.setAttribute('aria-current','page');
-    });
-  });
+  setTimeout(updateNavFades, 0);
 
   // Resaltado de sección activa
   const observer = new IntersectionObserver((entries)=>{
@@ -759,8 +764,9 @@
   [fromTier,toTier,feePct].forEach(el=> el && el.addEventListener('input', ()=>{ validatePath(); calcUpgrade(); }));
   validatePath(); calcUpgrade();
 
-  // Año en footer
+  // Año y versión en footer
   const yearEl = $('#year'); if (yearEl) yearEl.textContent = new Date().getFullYear();
+  const buildEl = $('#build'); if (buildEl) buildEl.textContent = `Actualizado ${new Date().toLocaleDateString('es-CO')} ${new Date().toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'})}`;
 
   // Hash inicial (#tiers, #contact, #t1/#t2/#t3)
   function applyInitialHash(){
@@ -785,6 +791,15 @@
   // Abrir todos los detalles al imprimir
   window.onbeforeprint = () => document.querySelectorAll('details').forEach(d=> d.open = true);
 
+  // Ajuste dinámico del offset de anclaje según altura real del topbar (móvil)
+  const _topbar = document.querySelector('.topbar');
+  function _updateTopbarVar(){
+    const h = _topbar ? Math.ceil(_topbar.getBoundingClientRect().height) : 64;
+    document.documentElement.style.setProperty('--topbar', h + 'px');
+  }
+  window.addEventListener('resize', _updateTopbarVar);
+  setTimeout(_updateTopbarVar, 0);
+
   // Self-tests mínimos (consola)
   try{
     if(fromTier && toTier && feePct){
@@ -797,18 +812,8 @@
       console.assert(Math.abs(n(feeOut.textContent) - fee)  < 0.6, 'Fee incorrecto');
       console.assert(Math.abs(n(totalOut.textContent)- total)< 0.8, 'Total incorrecto');
     }
-    console.log('[ARQEDU] UI inicializada');
+    console.log('[ARQEDU] v3 inicializada');
   }catch(e){ console.warn('Self-tests fallaron', e); }
-    </script>
-  <script>
-    // Ajuste dinámico del offset de anclaje según altura real del topbar (móvil)
-    const _topbar = document.querySelector('.topbar');
-    function _updateTopbarVar(){
-      const h = _topbar ? Math.ceil(_topbar.getBoundingClientRect().height) : 64;
-      document.documentElement.style.setProperty('--topbar', h + 'px');
-    }
-    window.addEventListener('resize', _updateTopbarVar);
-    window.setTimeout(_updateTopbarVar, 0);
   </script>
 </body>
 </html>
