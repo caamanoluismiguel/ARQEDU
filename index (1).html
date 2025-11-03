@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARQEDU · Diplomado BIM (160h) — Presentación Interactiva</title>
+  <meta name="description" content="Presentación interactiva, minimalista y mobile‑first para ARQEDU.COM — Diplomado en Metodologías BIM (160h) · ISTHMUS × Equipo Productor" />
+  <style>
+    :root{ --bg:#0b0b0c; --panel:#0f1012; --elev:#141518; --text:#f5f6f7; --muted:#b9c0cc; --line:#23262b; --accent:#00E5A8; --accent-2:#7FB3FF; --radius:20px; --shadow:0 1px 2px rgba(0,0,0,.12), 0 10px 30px rgba(0,0,0,.25); }
+    @media (prefers-color-scheme: light){ :root{--bg:#fcfcfd; --panel:#fff; --elev:#fff; --text:#0c0d0e; --muted:#60646c; --line:#e9eaee} .glass{backdrop-filter:saturate(1.2) blur(10px); background:rgba(255,255,255,.7)} }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{ margin:0; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Inter,Roboto,Helvetica,Arial,Apple Color Emoji,Segoe UI Emoji; background:radial-gradient(1200px 600px at 85% -10%, rgba(127,179,255,.08), transparent), radial-gradient(900px 500px at -10% 20%, rgba(0,229,168,.08), transparent), var(--bg); color:var(--text); line-height:1.5; }
+    a{color:inherit}
+
+    /* Tipografía & jerarquía */
+    h1{font-size:clamp(30px,4.5vw,48px); line-height:1.05; margin:.2rem 0 .6rem; font-weight:800}
+    h2{font-size:clamp(20px,2.6vw,30px); margin:.2rem 0 .6rem; font-weight:800}
+    h3{font-size:clamp(16px,2vw,22px); margin:.2rem 0 .4rem; font-weight:800}
+    .lead{color:var(--muted); font-size:clamp(15px,1.6vw,18px)}
+    .eyebrow{letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; color:var(--muted)}
+
+    /* Layout */
+    .topbar{position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.8) blur(10px); background:rgba(10,10,12,.5); border-bottom:1px solid var(--line)}
+    .row{position:relative; display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; max-width:1200px; margin:0 auto}
+    .row::before, .row::after{content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none;}
+    .row::before{left:0; background:linear-gradient(90deg, var(--bg), rgba(0,0,0,0))}
+    .row::after{right:0; background:linear-gradient(-90deg, var(--bg), rgba(0,0,0,0))}
+    .brand{display:flex; align-items:center; gap:.6rem; font-weight:800; letter-spacing:.2px}
+    .dot{width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow:0 0 0 4px rgba(0,229,168,.15)}
+    .nav{display:flex; gap:.35rem; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-left:auto; padding-inline-end:1.25rem}
+    .nav::-webkit-scrollbar{display:none}
+    .nav::after{content:""; flex:0 0 40px}
+    .pill{white-space:nowrap; padding:.5rem .9rem; border:1.5px solid var(--line); border-radius:999px; color:var(--muted); background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)); cursor:pointer; user-select:none; transition:.2s transform, .2s box-shadow}
+    .pill[aria-current="page"]{color:var(--text); border-color:transparent; font-weight:800; background:linear-gradient(135deg, rgba(0,229,168,.25), rgba(127,179,255,.22)); box-shadow:0 6px 20px rgba(0,229,168,.18)}
+    .pill:active{transform:translateY(1px)}
+
+    .hero{max-width:1200px; margin:1.2rem auto 0; padding:1.5rem}
+    .grid{display:grid; grid-template-columns:1.1fr .9fr; gap:1.2rem}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .card.pad{padding:1.2rem}
+
+    section{max-width:1200px; margin:1.2rem auto; padding:1.5rem; scroll-margin-top:76px}
+    .two{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; align-items:start}
+    .badges{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem}
+    .badge{border:1px solid var(--line); color:var(--muted); padding:.35rem .6rem; border-radius:999px; font-size:.85rem}
+    .cta{display:flex; gap:.6rem; flex-wrap:wrap; margin-top:1rem}
+    .btn{padding:.85rem 1.1rem; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.06)); color:var(--text); cursor:pointer; font-weight:800; letter-spacing:.2px}
+    .btn.primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0c; border-color:transparent}
+
+    /* Tabs de niveles */
+    .tabs{display:flex; gap:.4rem; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:14px; padding:.3rem}
+    .tab{flex:1; text-align:center; padding:.7rem .6rem; color:var(--muted); cursor:pointer; border-radius:10px; font-weight:700}
+    .tab[aria-selected="true"]{color:var(--text); font-weight:800; background:linear-gradient(135deg, rgba(0,229,168,.22), rgba(127,179,255,.22)); box-shadow:0 6px 18px rgba(0,229,168,.18)}
+    .tier{display:none}
+    .tier.active{display:grid; grid-template-columns:1.2fr .8fr; gap:1rem}
+    .price{font-size:2rem; font-weight:900; letter-spacing:.2px}
+    ul.clean{margin:.4rem 0 0 1.1rem} ul.clean li{margin:.35rem 0}
+
+    /* Acordeones */
+    details{border:1px solid var(--line); border-radius:14px; padding:1rem 1.2rem; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.05))}
+    details + details{margin-top:.8rem}
+    summary{cursor:pointer; list-style:none; font-weight:800}
+    summary::-webkit-details-marker{display:none}
+
+    /* Formularios */
+    .calc{display:grid; grid-template-columns:repeat(2,1fr); gap:.7rem; align-items:end}
+    .field{display:grid; gap:.2rem}
+    label{color:var(--muted); font-size:.95rem; font-weight:700}
+    select, input{appearance:none; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:.7rem .8rem; border-radius:12px}
+    .out{font-weight:900; font-size:1.15rem}
+    .hint{color:var(--muted); font-size:.95rem}
+    .note{color:var(--muted); font-size:.85rem}
+
+    footer{max-width:1200px; margin:2rem auto; padding:2rem 1.5rem; color:var(--muted); border-top:1px solid var(--line)}
+
+    /* Modales */
+    dialog{border:none; border-radius:16px; padding:1rem 1.2rem; background:var(--elev); color:var(--text); box-shadow:var(--shadow)}
+    dialog::backdrop{background:rgba(0,0,0,.5)}
+    .modal-actions{display:flex; gap:.5rem; margin-top:.8rem; justify-content:flex-end}
+    .input-like{width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:.8rem; border-radius:12px}
+
+    @media (max-width:980px){ .grid{grid-template-columns:1fr} .two{grid-template-columns:1fr; gap:1rem} .tier.active{grid-template-columns:1fr} }
+
+    /* Impresión */
+    @media print{
+      body{background:#fff; color:#000}
+      .topbar{display:none}
+      .card{box-shadow:none; background:#fff; border-color:#ddd}
+      a{color:#000; text-decoration:none}
+      details{border-color:#ccc}
+      section{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="row">
+      <div class="brand" aria-label="Marca ARQEDU">
+        <span class="dot" aria-hidden="true"></span>
+        <span>ARQEDU.COM</span>
+      </div>
+      <nav class="nav" id="topnav" aria-label="Navegación principal">
+        <button class="pill" data-goto="#overview" aria-current="page">Resumen</button>
+        <button class="pill" data-goto="#tiers">Niveles</button>
+        <button class="pill" data-goto="#value-b2c">Valor B2C</button>
+        <button class="pill" data-goto="#value-b2b">Valor B2B</button>
+        <button class="pill" data-goto="#why">¿Por qué ISTHMUS / ARQEDU?</button>
+        <button class="pill" data-goto="#platform">Plataforma</button>
+        <button class="pill" data-goto="#collab">Modelo de colaboración</button>
+        <button class="pill" data-goto="#founders">Cupos fundadores</button>
+        <button class="pill" data-goto="#launch">Lanzamiento</button>
+        <button class="pill" data-goto="#academic">Rigor académico</button>
+        <button class="pill" data-goto="#diploma">Diploma y verificación</button>
+        <button class="pill" data-goto="#respons">Responsabilidades</button>
+        <button class="pill" data-goto="#contact">Contacto</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="grid">
+        <div class="card pad">
+          <span class="eyebrow">Diplomado en Metodologías BIM · 160 horas</span>
+          <h1>Coordinación y gobernanza de información BIM para proyectos reales.</h1>
+          <p class="lead">Ruta de 3 niveles para profesionales y empresas. Evaluación por entregables, comité académico mixto y diploma con folio verificable emitido por ISTHMUS.</p>
+          <div class="badges">
+            <span class="badge">Stackable: Tier 3 → 2 → 1</span>
+            <span class="badge">BEP · CDE · ISO 19650</span>
+            <span class="badge">Rúbricas y evidencias</span>
+            <span class="badge">Plataforma ARQEDU</span>
+          </div>
+          <div class="cta">
+            <a class="btn primary" href="#tiers">Ver niveles</a>
+            <a class="btn" href="#collab">Modelo económico 70/30</a>
+          </div>
+        </div>
+        <div class="card pad">
+          <div class="two">
+            <div><h3>160h</h3><p class="note">Carga horaria del diplomado (Tier 1)</p></div>
+            <div><h3>3 niveles</h3><p class="note">Escalables con upgrade</p></div>
+            <div><h3>Upgrade</h3><p class="note">Diferencia + recargo acordado</p></div>
+            <div><h3>Folio</h3><p class="note">Diploma verificable</p></div>
+          </div>
+          <hr style="border:none;border-top:1px solid var(--line); margin:1rem 0">
+          <p class="hint">Enfoque: estandarización, coordinación entre disciplinas y control documental.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen ejecutivo 3 bullets -->
+    <section id="exec">
+      <div class="card pad">
+        <h2>Resumen ejecutivo</h2>
+        <ul class="clean">
+          <li><strong>Qué certifica:</strong> capacidad para coordinar y gobernar información BIM con BEP, CDE e ISO 19650.</li>
+          <li><strong>Cómo se evalúa:</strong> entregables con rúbrica (T2) y capstone con revisión de comité (T1).</li>
+          <li><strong>Qué obtiene ISTHMUS/empresa:</strong> credenciales verificables, evidencias y estándares replicables en proyectos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="overview">
+      <div class="two">
+        <div class="card pad">
+          <h2>Posicionamiento</h2>
+          <p class="lead">Formación orientada a <strong>método</strong>, no a botonografía. Se certifica la capacidad de coordinar y gobernar información BIM bajo estándares.</p>
+          <ul class="clean">
+            <li>Tier 3 — Fundamentos Metodológicos BIM · US$397</li>
+            <li>Tier 2 — Producción técnica dentro de Metodologías BIM · US$549</li>
+            <li>Tier 1 — Gestión y Coordinación BIM (Diplomado 160h) · US$897</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2>Estructura y precios</h2>
+          <ul class="clean">
+            <li><strong>Tier 3:</strong> lenguaje común BIM, interoperabilidad, preparación del proyecto. 100% asincrónico.</li>
+            <li><strong>Tier 2:</strong> producción técnica estandarizada, entregable evaluado con rúbrica.</li>
+            <li><strong>Tier 1:</strong> coordinación multidisciplinar, BEP, CDE, ISO 19650 y capstone revisado por comité.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="tiers">
+      <div class="card pad">
+        <h2>Comparador rápido de niveles</h2>
+        <div class="two" role="table" aria-label="Comparador de niveles">
+          <div role="row" class="card pad" style="padding:.8rem">
+            <strong role="cell">Público objetivo</strong>
+            <div class="note">T3: junior / migración CAD · T2: productores · T1: coordinadores</div>
+          </div>
+          <div role="row" class="card pad" style="padding:.8rem">
+            <strong role="cell">Formato</strong>
+            <div class="note">T3: 100% asincrónico · T2: asincrónico + entregable · T1: coordinación y capstone</div>
+          </div>
+          <div role="row" class="card pad" style="padding:.8rem">
+            <strong role="cell">Entregable/Evidencia</strong>
+            <div class="note">T2: rúbrica; T1: BEP+CDE+informe de coordinación</div>
+          </div>
+          <div role="row" class="card pad" style="padding:.8rem">
+            <strong role="cell">Certificación</strong>
+            <div class="note">T3: constancia · T2: competencia técnica · T1: diploma 160h ISTHMUS</div>
+          </div>
+          <div role="row" class="card pad" style="padding:.8rem">
+            <strong role="cell">Upgrade</strong>
+            <div class="note">Diferencia + % acordado (sugerido 15%)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:1rem">
+        <div class="tabs" role="tablist" aria-label="Selector de niveles">
+          <button class="tab" role="tab" aria-selected="true" data-tier="t3">Tier 3 · Fundamentos</button>
+          <button class="tab" role="tab" aria-selected="false" data-tier="t2">Tier 2 · Producción</button>
+          <button class="tab" role="tab" aria-selected="false" data-tier="t1">Tier 1 · Coordinación (160h)</button>
+        </div>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="tier active" id="t3">
+        <div class="card pad">
+          <div class="price">US$ <span data-price="t3"></span></div>
+          <p class="lead">Para perfiles junior y migración de CAD a BIM. Construye el lenguaje y la base del proyecto.</p>
+          <ul class="clean">
+            <li>Qué es BIM (método colaborativo).</li>
+            <li>Interoperabilidad: LOD/LOI, IFC, openBIM.</li>
+            <li>Configuración inicial: plantillas, reglas y nomenclatura.</li>
+            <li>Formato: 100% asincrónico con evaluaciones cortas.</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h3>Resultados y certificación</h3>
+          <ul class="clean">
+            <li>Entrega: archivo base + evaluación conceptual.</li>
+            <li>Certificado: Constancia de participación.</li>
+          </ul>
+          <div class="cta"><a class="btn" href="#calc">Calcular upgrade</a></div>
+        </div>
+        <div class="card pad">
+          <h3>Contenido del nivel</h3>
+          <div class="two">
+            <div>
+              <h4>Qué contiene</h4>
+              <ul class="clean">
+                <li>Marco BIM: principios, roles, vocabulario y ciclo de vida de la información.</li>
+                <li>Interoperabilidad: LOD/LOI, IFC, openBIM; convenciones de nomenclatura.</li>
+                <li>Preparación de proyecto: plantillas, carpetas, estándares de archivo y control básico de revisiones.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Resultados</h4>
+              <ul class="clean">
+                <li><strong>Estudiante:</strong> habla el mismo lenguaje BIM, configura un proyecto base y evita retrabajos típicos de arranque.</li>
+                <li><strong>Empresa:</strong> estandariza <em>naming</em> y estructura mínima común que reduce fricción entre disciplinas.</li>
+              </ul>
+            </div>
+          </div>
+          <details data-autoopen="true" style="margin-top:.6rem">
+            <summary>Preguntas que resolvemos</summary>
+            <ul class="clean">
+              <li>¿Cómo arrancar un proyecto con reglas claras para que escale sin caos?</li>
+              <li>¿Qué estándar de intercambio usar (IFC/openBIM) y cómo nombrar todo de forma consistente?</li>
+              <li>¿Qué evidencias mínimas exige coordinación más adelante?</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="tier" id="t2">
+        <div class="card pad">
+          <div class="price">US$ <span data-price="t2"></span></div>
+          <p class="lead">Para productores técnicos. Modelos y documentación útiles para coordinación.</p>
+          <ul class="clean">
+            <li>Estándares disciplinares (ARQ/ESTR/MEP) y preparación para federar.</li>
+            <li>Coordinación técnica: colisiones, reportes y control de revisiones.</li>
+            <li>Formato: asincrónico + <strong>entregable</strong> evaluado.</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h3>Resultados y certificación</h3>
+          <ul class="clean">
+            <li>Evaluación con <strong>rúbrica</strong> y retroalimentación.</li>
+            <li>Certificado: Competencia técnica en metodologías BIM.</li>
+          </ul>
+          <div class="cta"><a class="btn" href="#calc">Calcular upgrade</a></div>
+        </div>
+        <div class="card pad">
+          <h3>Contenido del nivel</h3>
+          <div class="two">
+            <div>
+              <h4>Qué contiene</h4>
+              <ul class="clean">
+                <li>Modelado disciplinar con criterios de coordinación (ARQ/ESTR/MEP).</li>
+                <li>Federación, detección de choques, bitácoras y reportes de incidencia.</li>
+                <li>Control de revisiones y trazabilidad en documentación.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Resultados</h4>
+              <ul class="clean">
+                <li><strong>Estudiante:</strong> produce modelos y láminas que pasan control de calidad y son coordinables sin retrabajos excesivos.</li>
+                <li><strong>Empresa:</strong> obtiene evidencia medible (entregable corregido con rúbrica) para su estándar interno.</li>
+              </ul>
+            </div>
+          </div>
+          <details data-autoopen="true" style="margin-top:.6rem">
+            <summary>Preguntas que resolvemos</summary>
+            <ul class="clean">
+              <li>¿Cómo asegurar que mis entregables sirvan para coordinación y no solo “se vean bien”?</li>
+              <li>¿Cómo registrar colisiones, decisiones y versiones de forma auditable?</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <!-- Tier 1 -->
+      <div class="tier" id="t1">
+        <div class="card pad">
+          <div class="price">US$ <span data-price="t1"></span></div>
+          <p class="lead">Para coordinadores BIM y BIM Leads. Gobernanza de información y coordinación real.</p>
+          <ul class="clean">
+            <li>Coordinación multidisciplinar y gestión de colisiones.</li>
+            <li>CDE: control documental, versiones, permisos y aprobaciones.</li>
+            <li>BEP: responsabilidades, plazos y estándares.</li>
+            <li>ISO 19650 y roles.</li>
+            <li>Capstone: mini BEP + informe de coordinación (revisión humana).</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h3>Diploma</h3>
+          <ul class="clean">
+            <li>“Diplomado en Metodologías BIM (160h) · ISTHMUS” con folio verificable.</li>
+            <li>Revisión por Comité Académico Mixto.</li>
+          </ul>
+          <div class="cta"><a class="btn primary" href="#contact">Contacto</a></div>
+        </div>
+        <div class="card pad">
+          <h3>Contenido del nivel</h3>
+          <div class="two">
+            <div>
+              <h4>Qué contiene</h4>
+              <ul class="clean">
+                <li>Plan de Ejecución BIM (BEP) acotado al proyecto del participante.</li>
+                <li>Implantación de CDE: flujos de revisión, permisos y aprobación.</li>
+                <li>Gestión de coordinación: priorización de choques y cierre con responsables/plazos.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Resultados</h4>
+              <ul class="clean">
+                <li><strong>Estudiante:</strong> lidera coordinación real, justifica decisiones y entrega un capstone evaluado por comité.</li>
+                <li><strong>Empresa:</strong> gana un referente interno capaz de establecer BEP y operar CDE con criterios ISO 19650.</li>
+              </ul>
+            </div>
+          </div>
+          <details data-autoopen="true" style="margin-top:.6rem">
+            <summary>Preguntas que resolvemos</summary>
+            <ul class="clean">
+              <li>¿Cómo administrar permisos, versiones y aprobaciones en CDE?</li>
+              <li>¿Cómo priorizar choques y documentar decisiones para auditoría?</li>
+              <li>¿Cómo traducir BEP a prácticas de equipo sin fricción?</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="calc">
+      <div class="two">
+        <div class="card pad">
+          <h2>Calculadora de upgrade</h2>
+          <p class="hint">El upgrade se define como <strong>diferencia</strong> entre niveles + un <strong>recargo</strong> acordado (por defecto 15%).</p>
+          <div class="calc" style="margin-top:.6rem">
+            <div class="field">
+              <label for="fromTier">Nivel actual</label>
+              <select id="fromTier">
+                <option value="t3">Tier 3 · US$397</option>
+                <option value="t2">Tier 2 · US$549</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="toTier">Siguiente nivel</label>
+              <select id="toTier">
+                <option value="t2">Tier 2 · US$549</option>
+                <option value="t1">Tier 1 · US$897</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="feePct">Recargo de upgrade (%)</label>
+              <input type="number" id="feePct" min="0" value="15" />
+            </div>
+            <div class="field"><label>Precio destino</label><div class="out" id="destPrice" role="status" aria-live="polite" aria-atomic="true">—</div></div>
+            <div class="field"><label>Diferencia</label><div class="out" id="diffOut" role="status" aria-live="polite" aria-atomic="true">—</div></div>
+            <div class="field"><label>Recargo</label><div class="out" id="feeOut" role="status" aria-live="polite" aria-atomic="true">—</div></div>
+            <div class="field"><label>Total a pagar</label><div class="out" id="totalOut" role="status" aria-live="polite" aria-atomic="true">—</div></div>
+          </div>
+          <p class="note">Fórmula: Total = (Precio destino − Precio nivel actual) + Recargo% sobre esa diferencia.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="value-b2c">
+      <div class="card pad">
+        <h2>Valor para profesionales (B2C)</h2>
+        <div class="two">
+          <div>
+            <p class="lead">Del “sé usar un programa” al “puedo coordinar, documentar y responder por decisiones técnicas”.</p>
+            <ul class="clean">
+              <li><strong>Tier 3:</strong> lenguaje y fundamentos BIM.</li>
+              <li><strong>Tier 2:</strong> entregables coordinables que prueban competencia.</li>
+              <li><strong>Tier 1:</strong> BEP, CDE, ISO 19650 y coordinación real. Diploma verificable.</li>
+            </ul>
+          </div>
+          <div>
+            <details open>
+              <summary>Mensaje clave</summary>
+              <p>Credencial verificable + evidencia de capacidad para coordinar bajo estándares.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="value-b2b">
+      <div class="card pad">
+        <h2>Valor para organizaciones (B2B)</h2>
+        <div class="two">
+          <div>
+            <p class="lead">Menos retrabajo y riesgos; más trazabilidad y control de información.</p>
+            <ul class="clean">
+              <li><strong>Tier 3:</strong> todos comparten el mismo lenguaje.</li>
+              <li><strong>Tier 2:</strong> producción técnica estandarizada para coordinar.</li>
+              <li><strong>Tier 1:</strong> líderes internos que establecen BEP, gestionan CDE y sustentan decisiones.</li>
+            </ul>
+          </div>
+          <div>
+            <details data-autoopen="true" open>
+              <summary>¿Qué recibirá gerencia?</summary>
+              <p>Formación que habilita <strong>gobernanza de información</strong> y <strong>control de riesgo</strong> documental/técnico.</p>
+            </details>
+            <details data-autoopen="true" style="margin-top:.6rem">
+              <summary>Soporte institucional para empresas</summary>
+              <p>ISTHMUS puede emitir <strong>resúmenes por cohorte y por empresa</strong> (p.ej., cuántas personas aprobaron cada nivel) para verificación y comunicación corporativa.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="two">
+        <div class="card pad">
+          <h2>¿Por qué ISTHMUS?</h2>
+          <ul class="clean">
+            <li>Aval académico y reputación institucional.</li>
+            <li>Diploma del Tier 1 con folio verificable y carga horaria explícita (160h).</li>
+            <li>Docentes invitados y visibilidad institucional.</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2>¿Por qué ARQEDU?</h2>
+          <ul class="clean">
+            <li>Unifica contenidos, evaluaciones, evidencias y pagos.</li>
+            <li>Venta por niveles y upgrades controlados.</li>
+            <li>Exportes auditables de calificaciones y entregables.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="platform">
+      <div class="card pad">
+        <h2>Plataforma ARQEDU (operado con Kajabi)</h2>
+        <div class="two">
+          <div>
+            <p class="lead">Operamos en una plataforma <strong>todo‑en‑uno</strong> para reducir fricción y asegurar continuidad.</p>
+            <ul class="clean">
+              <li><strong>Cursos y cohortes:</strong> aulas, lecciones, descargas y cuestionarios.</li>
+              <li><strong>Checkout y ofertas:</strong> venta por niveles, upgrades y cupones; impuestos/monedas soportadas.</li>
+              <li><strong>Automatizaciones:</strong> emails, tags, segmentos y flujos por progreso/estado de pago.</li>
+              <li><strong>Reportes:</strong> por alumno, cohorte y empresa (participación, finalización, calificaciones).</li>
+              <li><strong>Certificados:</strong> emisión y registro interno con folio/ID.</li>
+              <li><strong>Privacidad y soporte:</strong> roles, recuperación de acceso, exportes CSV y respaldo.</li>
+            </ul>
+          </div>
+          <div>
+            <details data-autoopen="true">
+              <summary>¿Por qué Kajabi para ARQEDU?</summary>
+              <ul class="clean">
+                <li>Concentra <em>contenido + pagos + CRM + email</em> en un solo lugar (menos integraciones frágiles).</li>
+                <li>Permite <strong>upgrades controlados</strong> por oferta y seguimiento de ingresos por cohorte/empresa.</li>
+                <li>Escala sin perder trazabilidad de evidencias y calificaciones.</li>
+                <li>Reduce riesgo operativo: alta disponibilidad, soporte y seguridad gestionada.</li>
+              </ul>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collab">
+      <div class="card pad">
+        <h2>Modelo económico (sobre ingreso neto)</h2>
+        <p class="lead">70% Equipo Productor · 30% ISTHMUS, aplicado sobre el ingreso <strong>neto</strong> por estudiante.</p>
+        <details open>
+          <summary>Ejemplos por estudiante</summary>
+          <ul class="clean">
+            <li>Tier 3 US$397 → neto ~357 → 70%: 250 / 30%: 107.</li>
+            <li>Tier 2 US$549 → neto ~489 → 70%: 342 / 30%: 147.</li>
+            <li>Tier 1 US$897 → neto ~817 → 70%: 572 / 30%: 245.</li>
+          </ul>
+        </details>
+        <p class="note">El detalle operativo de costos internos se comparte solo entre las partes y no se muestra en esta versión.</p>
+      </div>
+    </section>
+
+    <section id="founders">
+      <div class="card pad">
+        <h2>Cupos fundadores (piloto)</h2>
+        <p class="lead">6 plazas seleccionadas por ISTHMUS para activar casos reales y ajustar rúbricas.</p>
+        <ul class="clean">
+          <li>1 en Tier 3 · 2 en Tier 2 · 3 en Tier 1.</li>
+          <li>Generan testimonios y material de comunicación.</li>
+        </ul>
+        <details data-autoopen="true" style="margin-top:.6rem" open>
+          <summary>Condiciones y financiamiento</summary>
+          <ul class="clean">
+            <li><strong>Propuesta:</strong> ISTHMUS asume el valor de estas 6 matrículas como inversión de lanzamiento (modalidad negociable: pago completo, parcial o beca institucional).</li>
+            <li>Finalidad: activar <em>alumnos reales</em> desde el día uno, validar claridad de contenidos y dinámica de soporte, y producir casos con evidencia.</li>
+            <li><strong>Criterios de selección:</strong> mérito académico y potencial de impacto; diversidad de perfiles (ARQ/ESTR/MEP).</li>
+            <li><strong>Compromisos del fundador:</strong> completar el nivel, autorizar uso de testimonio/evidencias y participar en sesión de feedback.</li>
+          </ul>
+          <p class="note">Piloto académico controlado para calibrar rúbricas y recoger feedback antes del escalamiento.</p>
+        </details>
+      </div>
+    </section>
+
+    <section id="launch">
+      <div class="card pad">
+        <h2>Evento de lanzamiento</h2>
+        <div class="two">
+          <div>
+            <h3>Formato sugerido</h3>
+            <ul class="clean">
+              <li>Presentación pública del Diplomado (160h).</li>
+              <li>Anuncio oficial de los 6 estudiantes fundadores.</li>
+              <li>Reconocimiento a egresados/profesores con trayectoria en coordinación BIM.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Beneficios esperados</h3>
+            <ul class="clean">
+              <li>Refuerza prestigio académico y visibilidad institucional.</li>
+              <li>Genera material audiovisual para web, redes y prensa.</li>
+              <li>Abre la puerta a B2B como solución de estandarización metodológica.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="academic">
+      <div class="two">
+        <div class="card pad">
+          <h2>Marco académico</h2>
+          <ul class="clean">
+            <li>Resultados de aprendizaje claros por nivel.</li>
+            <li>Rúbricas de aprobación y registro auditable de evidencias.</li>
+            <li>Tier 2: evaluación de entregable. Tier 1: capstone con BEP y coordinación multidisciplinar.</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2>Comité Académico Mixto</h2>
+          <ul class="clean">
+            <li>1 representante ISTHMUS + 1 del Equipo Productor.</li>
+            <li>Valida capstones, resuelve apelaciones y protege el nivel del diploma.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="diploma">
+      <div class="two">
+        <div class="card pad">
+          <h2>Diploma y verificación</h2>
+          <ul class="clean">
+            <li>Diploma con folio/ID verificable, nombre, fecha y firma autorizada.</li>
+            <li>Registro espejo: archivo del productor + acta digital ISTHMUS.</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2>Alcances de comunicación</h2>
+          <ul class="clean">
+            <li>Siempre “Educación Continua ISTHMUS”.</li>
+            <li>No utilizar “título oficial”/“posgrado oficial”.</li>
+            <li>Enfoque: coordinación BIM, BEP, CDE e ISO 19650.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="respons">
+      <div class="card pad">
+        <h2>Responsabilidades formales</h2>
+        <div class="two">
+          <div>
+            <h3>Equipo Productor</h3>
+            <ul class="clean">
+              <li>Contenido, operación, soporte y marketing.</li>
+              <li>Mantenimiento de materiales y custodia de evidencias por alumno.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>ISTHMUS</h3>
+            <ul class="clean">
+              <li>Autorización de uso de nombre en certificados y diploma.</li>
+              <li>Participación en Comité Mixto y selección de cupos.</li>
+              <li>Custodia del registro oficial de diplomas.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="card pad">
+        <h2>Próximos pasos</h2>
+        <div class="two">
+          <div>
+            <ul class="clean">
+              <li><strong>Aprobación formal ISTHMUS</strong> del modelo académico, económico y de comunicación.</li>
+              <li><strong>Fechas del piloto</strong>: convocatoria, inicio y revisión de capstones.</li>
+              <li><strong>Producción</strong>: guiones, rúbricas, aulas, ofertas y automatizaciones en ARQEDU.</li>
+              <li><strong>Socialización institucional</strong>: web ISTHMUS, newsletter y redes.</li>
+            </ul>
+          </div>
+          <div>
+            <button class="btn primary" id="printBtn">Imprimir</button>
+            <p class="hint" style="margin-top:.4rem">Genera una versión lista para reunión o firma.</p>
+            <a class="btn primary" id="zipBtn" href="https://drive.google.com/uc?export=download&id=1ZF2f6xKMZGiwOlN3XMFGL4xt1qYbrlkA" target="_blank" rel="noopener">Descargar ZIP de presentaciones</a>
+            <a class="btn" href="https://drive.google.com/file/d/1ZF2f6xKMZGiwOlN3XMFGL4xt1qYbrlkA/view?usp=drive_link" target="_blank" rel="noopener">Ver en Drive</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>© <span id="year"></span> ARQEDU.COM — UI minimalista para desktop y móvil.</small>
+  </footer>
+
+  <script>
+  // =========================
+  // ARQEDU · Interactivo BIM (estable)
+  // =========================
+
+  // Datos base
+  const PRICES = { t3: 397, t2: 549, t1: 897 };
+
+  // Utils
+  const $  = (sel)=> document.querySelector(sel);
+  const $$ = (sel)=> [...document.querySelectorAll(sel)];
+  const fmt = (n)=> `US$ ${Number(n||0).toLocaleString(undefined,{maximumFractionDigits:2})}`;
+
+  // Inicializa precios
+  $$('[data-price]').forEach(el=>{ const k = el.getAttribute('data-price'); if(k && PRICES[k]!==undefined){ el.textContent = PRICES[k].toLocaleString(); }});
+
+  // Tabs de niveles
+  const tabs = $$('.tab');
+  function activateTier(id){
+    $$('.tier').forEach(p=>p.classList.remove('active'));
+    const panel = document.getElementById(id);
+    if(panel){ panel.classList.add('active'); panel.querySelectorAll('details[data-autoopen="true"]').forEach(d=> d.open = true ); }
+    // Actualiza hash para compartir #t3/#t2/#t1
+    if(['t1','t2','t3'].includes(id)) history.replaceState(null,'',`#${id}`);
+  }
+  tabs.forEach(t=> t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    activateTier(t.dataset.tier);
+    if (window.innerWidth < 980) $('#tiers')?.scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+
+  // Navegación superior
+  $$('[data-goto]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const target = document.querySelector(el.getAttribute('data-goto'));
+      if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      $$('.pill').forEach(p=>p.removeAttribute('aria-current'));
+      el.setAttribute('aria-current','page');
+    });
+  });
+
+  // Resaltado de sección activa
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = `#${entry.target.id}`;
+        $$('.pill').forEach(p=>p.removeAttribute('aria-current'));
+        const active = document.querySelector(`.pill[data-goto='${id}']`);
+        if(active) active.setAttribute('aria-current','page');
+      }
+    })
+  }, {rootMargin:'-40% 0px -55% 0px', threshold:[0,1]});
+  $$('section').forEach(s=>observer.observe(s));
+
+  // Botón imprimir
+  $('#printBtn')?.addEventListener('click', ()=> window.print());
+
+  // Calculadora upgrade (diferencia + %)
+  const fromTier = $('#fromTier');
+  const toTier   = $('#toTier');
+  const feePct   = $('#feePct');
+  const destPrice= $('#destPrice');
+  const diffOut  = $('#diffOut');
+  const feeOut   = $('#feeOut');
+  const totalOut = $('#totalOut');
+
+  function calcUpgrade(){
+    if(!fromTier||!toTier||!feePct) return;
+    const from = fromTier.value, to = toTier.value;
+    const toPrice = PRICES[to] ?? 0;
+    const fromPrice = PRICES[from] ?? 0;
+    const diff = Math.max(0, toPrice - fromPrice);
+    const fee = Math.max(0, diff * (parseFloat(feePct.value||0)/100));
+    const total = diff + fee;
+    if(destPrice) destPrice.textContent = fmt(toPrice);
+    if(diffOut)   diffOut.textContent   = fmt(diff);
+    if(feeOut)    feeOut.textContent    = fmt(fee);
+    if(totalOut)  totalOut.textContent  = fmt(total);
+  }
+  function validatePath(){
+    if(!fromTier||!toTier) return;
+    if (fromTier.value === 't3' && toTier.value === 't3') toTier.value = 't2';
+    if (fromTier.value === 't2' && toTier.value === 't3') toTier.value = 't1';
+  }
+  [fromTier,toTier,feePct].forEach(el=> el && el.addEventListener('input', ()=>{ validatePath(); calcUpgrade(); }));
+  validatePath(); calcUpgrade();
+
+  // Año en footer
+  const yearEl = $('#year'); if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Hash inicial (#tiers, #contact, #t1/#t2/#t3)
+  function applyInitialHash(){
+    const h = location.hash.replace('#','');
+    if(['t1','t2','t3'].includes(h)){
+      tabs.forEach(x=>x.setAttribute('aria-selected','false'));
+      const btn = document.querySelector(`.tab[data-tier='${h}']`);
+      if(btn){ btn.setAttribute('aria-selected','true'); activateTier(h); }
+      document.getElementById('tiers')?.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+    if(h){
+      const target = document.getElementById(h);
+      const pill = document.querySelector(`.pill[data-goto='#${h}']`);
+      if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      if(pill){ $$('.pill').forEach(p=>p.removeAttribute('aria-current')); pill.setAttribute('aria-current','page'); }
+    }
+  }
+  window.addEventListener('hashchange', applyInitialHash);
+  applyInitialHash();
+
+  // Abrir todos los detalles al imprimir
+  window.onbeforeprint = () => document.querySelectorAll('details').forEach(d=> d.open = true);
+
+  // Self-tests mínimos (consola)
+  try{
+    if(fromTier && toTier && feePct){
+      fromTier.value='t3'; toTier.value='t2'; feePct.value='15'; calcUpgrade();
+      const n = (s)=> Number(String(s||'').replace(/[^0-9.\-]/g,''));
+      const diff = 549 - 397; // 152
+      const fee  = diff * 0.15; // 22.8
+      const total= diff + fee;  // 174.8
+      console.assert(Math.abs(n(diffOut.textContent) - diff) < 0.5, 'Diff incorrecto');
+      console.assert(Math.abs(n(feeOut.textContent) - fee)  < 0.6, 'Fee incorrecto');
+      console.assert(Math.abs(n(totalOut.textContent)- total)< 0.8, 'Total incorrecto');
+    }
+    console.log('[ARQEDU] UI inicializada');
+  }catch(e){ console.warn('Self-tests fallaron', e); }
+  </script>
+</body>
+</html>
