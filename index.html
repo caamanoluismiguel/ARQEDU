@@ -22,15 +22,17 @@
     /* Layout */
     .topbar{position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.8) blur(10px); background:rgba(10,10,12,.5); border-bottom:1px solid var(--line)}
     .row{position:relative; display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; max-width:1200px; margin:0 auto}
-    .row::before, .row::after{content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none;}
+    .row::before, .row::after{content:""; position:absolute; top:0; bottom:0; width:28px; pointer-events:none; transition:opacity .2s; opacity:1;}
+    .row.edge-left::before{opacity:0}
+    .row.edge-right::after{opacity:0}
     .row::before{left:0; background:linear-gradient(90deg, var(--bg), rgba(0,0,0,0))}
     .row::after{right:0; background:linear-gradient(-90deg, var(--bg), rgba(0,0,0,0))}
     .brand{display:flex; align-items:center; gap:.6rem; font-weight:800; letter-spacing:.2px}
     .dot{width:10px; height:10px; border-radius:50%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow:0 0 0 4px rgba(0,229,168,.15)}
-    .nav{display:flex; gap:.35rem; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-left:auto; padding-inline-end:1.25rem}
+    .nav{display:flex; gap:.35rem; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-left:auto; padding-inline-end:2.75rem; scroll-snap-type:x proximity}
     .nav::-webkit-scrollbar{display:none}
-    .nav::after{content:""; flex:0 0 40px}
-    .pill{white-space:nowrap; padding:.5rem .9rem; border:1.5px solid var(--line); border-radius:999px; color:var(--muted); background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)); cursor:pointer; user-select:none; transition:.2s transform, .2s box-shadow}
+    .nav::after{content:""; flex:0 0 96px}
+    .pill{white-space:nowrap; padding:.5rem .9rem; border:1.5px solid var(--line); border-radius:999px; color:var(--muted); background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)); cursor:pointer; user-select:none; transition:.2s transform, .2s box-shadow; scroll-snap-align:start}
     .pill[aria-current="page"]{color:var(--text); border-color:transparent; font-weight:800; background:linear-gradient(135deg, rgba(0,229,168,.25), rgba(127,179,255,.22)); box-shadow:0 6px 20px rgba(0,229,168,.18)}
     .pill:active{transform:translateY(1px)}
 
@@ -39,7 +41,7 @@
     .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
     .card.pad{padding:1.2rem}
 
-    section{max-width:1200px; margin:1.2rem auto; padding:1.5rem; scroll-margin-top:76px}
+    section{max-width:1200px; margin:1.2rem auto; padding:1.5rem; scroll-margin-top:calc(var(--topbar, 76px) + 8px)}
     .two{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; align-items:start}
     .badges{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem}
     .badge{border:1px solid var(--line); color:var(--muted); padding:.35rem .6rem; border-radius:999px; font-size:.85rem}
@@ -71,7 +73,7 @@
     .hint{color:var(--muted); font-size:.95rem}
     .note{color:var(--muted); font-size:.85rem}
 
-    footer{max-width:1200px; margin:2rem auto; padding:2rem 1.5rem; color:var(--muted); border-top:1px solid var(--line)}
+    footer{max-width:1200px; margin:2rem auto; padding:2rem 1.5rem calc(2rem + env(safe-area-inset-bottom,0px)); color:var(--muted); border-top:1px solid var(--line)}
 
     /* Modales */
     dialog{border:none; border-radius:16px; padding:1rem 1.2rem; background:var(--elev); color:var(--text); box-shadow:var(--shadow)}
@@ -80,6 +82,7 @@
     .input-like{width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:.8rem; border-radius:12px}
 
     @media (max-width:980px){ .grid{grid-template-columns:1fr} .two{grid-template-columns:1fr; gap:1rem} .tier.active{grid-template-columns:1fr} }
+    @media (max-width:600px){ .calc{grid-template-columns:1fr} .cta{flex-direction:column} .btn{width:100%; text-align:center; white-space:normal} }
 
     /* Impresión */
     @media print{
@@ -692,6 +695,23 @@
       el.setAttribute('aria-current','page');
     });
   });
+  // Fades del menú: no ocultar opciones al llegar al extremo
+  const topnav = document.getElementById('topnav');
+  const rowEl = document.querySelector('.row');
+  function updateNavFades(){
+    if(!topnav||!rowEl) return;
+    const atStart = topnav.scrollLeft <= 1;
+    const atEnd = topnav.scrollLeft + topnav.clientWidth >= topnav.scrollWidth - 1;
+    rowEl.classList.toggle('edge-left', atStart);
+    rowEl.classList.toggle('edge-right', atEnd);
+  }
+  topnav?.addEventListener('scroll', updateNavFades, {passive:true});
+  window.addEventListener('resize', updateNavFades);
+  setTimeout(updateNavFades, 0); }
+      $$('.pill').forEach(p=>p.removeAttribute('aria-current'));
+      el.setAttribute('aria-current','page');
+    });
+  });
 
   // Resaltado de sección activa
   const observer = new IntersectionObserver((entries)=>{
@@ -779,6 +799,16 @@
     }
     console.log('[ARQEDU] UI inicializada');
   }catch(e){ console.warn('Self-tests fallaron', e); }
+    </script>
+  <script>
+    // Ajuste dinámico del offset de anclaje según altura real del topbar (móvil)
+    const _topbar = document.querySelector('.topbar');
+    function _updateTopbarVar(){
+      const h = _topbar ? Math.ceil(_topbar.getBoundingClientRect().height) : 64;
+      document.documentElement.style.setProperty('--topbar', h + 'px');
+    }
+    window.addEventListener('resize', _updateTopbarVar);
+    window.setTimeout(_updateTopbarVar, 0);
   </script>
 </body>
 </html>
